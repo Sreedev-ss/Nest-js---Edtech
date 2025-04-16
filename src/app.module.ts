@@ -4,10 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { WelcomeMailModule } from './welcome-mail/welcome-mail.module';
 
 @Module({
   imports: [
     AuthModule,
+    WelcomeMailModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -20,7 +22,7 @@ import { AppService } from './app.service';
       synchronize: true,
     }),
   ],
-  controllers: [AppController], // 👈 this must be there
+  controllers: [AppController], 
   providers: [AppService],
 })
 export class AppModule { }

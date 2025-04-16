@@ -14,9 +14,9 @@ export class AuthService {
     private usersRepo: Repository<User>
   ) {}
 
-  async register(email: string, password: string) {
+  async register(name:string, email: string, password: string) {
     const hashed = await bcrypt.hash(password, 10);
-    const user = this.usersRepo.create({ email, password: hashed });
+    const user = this.usersRepo.create({ name, email, password: hashed });
     return this.usersRepo.save(user);
   }
 

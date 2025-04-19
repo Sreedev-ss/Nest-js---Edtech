@@ -16,6 +16,7 @@ export class WelcomeMailService {
     ) { }
 
     async sendWelcomeMail(adminId: any, studentId: any) {
+
         const [admin, student] = await Promise.all([
             this.userRepo.findOne({ where: { id: adminId } }),
             this.userRepo.findOne({ where: { id: studentId } }),
@@ -32,16 +33,21 @@ export class WelcomeMailService {
         if (alreadySent) {
             throw new ConflictException('Welcome email already sent to this student');
         }
+        
+        try {
+            await this.mailService.sendWelcomeEmail(student.email, student.name, admin.name);
 
-        await this.mailService.sendWelcomeEmail(student.email, student.name, admin.name);
+            const record = this.mailRepo.create({
+                admin,
+                student,
+                isSent: true,
+            });
 
-        const record = this.mailRepo.create({
-            admin,
-            student,
-            isSent: true,
-        });
+            return this.mailRepo.save(record);
+        } catch (error) {
+            throw error
+        }
 
-        return this.mailRepo.save(record);
     }
 
     async getLogsForStudent(studentId: any) {
